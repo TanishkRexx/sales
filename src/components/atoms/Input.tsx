@@ -1,6 +1,6 @@
 type Props = {
   value: number;
-  onChange: (val: number) => void;
+  onChange: (value: number) => void;
 };
 
 export default function Input({ value, onChange }: Props) {
@@ -8,12 +8,9 @@ export default function Input({ value, onChange }: Props) {
     <input
       type="number"
       value={value}
-      onChange={(e) => {
-  const value = e.target.value;
-  onChange(value === "" ? 0 : Number(value));
-}}
-      className="border px-3 py-2 rounded w-40"
-      placeholder="Sales Threshold"
+      onChange={(e) => onChange(Number(e.target.value))}
+      placeholder="Sales threshold"
+      className="border px-3 py-2 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-emerald-400"
     />
   );
 }

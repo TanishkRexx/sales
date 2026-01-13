@@ -11,70 +11,74 @@ import {
   YAxis,
   Tooltip,
   CartesianGrid,
+  ResponsiveContainer,
 } from "recharts";
 
 type Props = {
   data: any[];
   type: string;
-  year: number; // 👈 ADD THIS
+  year: number;
 };
 
 export default function SalesChart({ data, type, year }: Props) {
-  // 🎨 Color by year
+  
   const colorMap: Record<number, string> = {
-    2022: "#16a34a", // green
-    2023: "#2563eb", // blue
-    2024: "#dc2626", // red
+    2022: "#16a34a", 
+    2023: "#2563eb", 
+    2024: "#0d9488", 
   };
 
   const color = colorMap[year] || "#2563eb";
 
-  // 📈 LINE CHART
+  /*  LINE CHART  */
   if (type === "line") {
     return (
-      <LineChart width={600} height={300} data={data}>
+      <ResponsiveContainer width="100%" height={320}>
+        <LineChart data={data}>
+          <XAxis dataKey="month" />
+          <YAxis />
+          <Tooltip />
+          <Line type="monotone" dataKey="sales" stroke={color} strokeWidth={3}  dot={{ r: 4 }}  isAnimationActive
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    );
+  }
+
+  /* PIE CHART */
+  if (type === "pie") {
+    return (
+      <ResponsiveContainer width="100%" height={320}>
+        <PieChart>
+          <Pie
+            data={data}
+            dataKey="sales"
+            nameKey="month"
+            fill={color}
+            outerRadius={100}
+            isAnimationActive
+          />
+          <Tooltip />
+        </PieChart>
+      </ResponsiveContainer>
+    );
+  }
+
+  /* BAR CHART */
+  return (
+    <ResponsiveContainer width="100%" height={320}>
+      <BarChart data={data}>
+        <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="month" />
         <YAxis />
         <Tooltip />
-        <Line
-          type="monotone"
+        <Bar
           dataKey="sales"
-          stroke={color}     // 👈 HERE
-          strokeWidth={3}
+          fill={color}
+          radius={[6, 6, 0, 0]}
           isAnimationActive
         />
-      </LineChart>
-    );
-  }
-
-  // 🥧 PIE CHART
-  if (type === "pie") {
-    return (
-      <PieChart width={400} height={300}>
-        <Pie
-          data={data}
-          dataKey="sales"
-          nameKey="month"
-          fill={color}      // 👈 HERE
-          isAnimationActive
-        />
-        <Tooltip />
-      </PieChart>
-    );
-  }
-
-  // 📊 BAR CHART (DEFAULT)
-  return (
-    <BarChart width={600} height={300} data={data}>
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="month" />
-      <YAxis />
-      <Tooltip />
-      <Bar
-        dataKey="sales"
-        fill={color}       // 👈 HERE
-        isAnimationActive
-      />
-    </BarChart>
+      </BarChart>
+    </ResponsiveContainer>
   );
 }
